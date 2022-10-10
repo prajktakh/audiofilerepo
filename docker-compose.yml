@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  localstack:
+    container_name: "localstackmain"
+    image: localstack/localstack:0.10.6
+    ports:
+      - "127.0.0.1:4566:4566"            # LocalStack Gateway
+      - "127.0.0.1:8082:8082"            # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+      - "127.0.0.1:443:443"              # LocalStack HTTPS Gateway (only required for Pro)
+    environment:
+      - SERVICES=s3:4566
+      - HOSTNAME_EXTERNAL=localhost
+      - DEBUG=${DEBUG-}
+      - PERSISTENCE=${PERSISTENCE-}
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR-}
+      - LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY-}  # only required for Pro
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - PORT_WEB_UI=8082
+      - AWS_DEFAULT_REGION=us-west-1
+      - AWS_SECRET_ACCESS_KEY=PPP
+      - AWS_ACCESS_KEY_ID=EEE
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
